@@ -4,8 +4,6 @@ import * as path from 'path';
 import * as cors from 'cors';
 import * as compression from 'compression';
 
-//import { router } from './routes/index';
-
 const app: express.Application = express();
 
 app.disable('x-powered-by');
@@ -20,9 +18,6 @@ app.use(cors({
 }));
 
 // app.set('env', 'production');
-
-// routes
-//app.use('/', router);
 
 if (app.get('env') === 'production') {
   // in production mode run application from dist folder
