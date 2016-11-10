@@ -1,5 +1,7 @@
 # mancalaNg
 Play mancala in your web browser
+View the app on Heroku: [https://mancalang.herokuapp.com/](https://mancalang.herokuapp.com/)
+
 
 ## Technologies
 
@@ -7,6 +9,7 @@ Play mancala in your web browser
 - Express (Web Server Framework built on Node.js)
 - TypeScript (Programming Language - JavaScript Superset)
 - Heroku (PaaS Host)
+
 
 ## Install / Development
 
@@ -23,10 +26,12 @@ npm run start
 # Client URL: http://localhost:4200
 ```
 
+
 ## Build / Production
 
 ```bash
 npm run build
+
 
 ## Deploy dist folder to app server
 
