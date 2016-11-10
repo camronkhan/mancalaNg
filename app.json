@@ -1,6 +1,6 @@
 {
   "name": "mancalaNg",
-  "description": "Play mancala in a web browser",
+  "description": "Play mancala in your web browser",
   "repository": "https://github.com/camronkhan/mancalaNg",
   "keywords": ["mancala", "angular2"]
 }

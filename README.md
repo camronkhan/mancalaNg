@@ -1,4 +1,5 @@
 # mancalaNg
+Play mancala in your web browser
 
 ## Technologies
 
