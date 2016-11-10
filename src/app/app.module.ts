@@ -2,21 +2,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { GameboardModule } from './gameboard/gameboard.module';
 
 import { AppComponent } from './app.component';
-import { HighlightDirective } from './directives/highlight.directive';
-import { GameboardComponent } from './gameboard/gameboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HighlightDirective,
-    GameboardComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    GameboardModule
   ],
   providers: [],
   bootstrap: [

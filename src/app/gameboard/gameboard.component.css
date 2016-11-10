@@ -1,0 +1,10 @@
+.gameboard {
+	fill:#8D5B33;
+}
+.mancala,
+.pocket {
+	fill:#C49A6C;
+}
+.hover {
+  fill: yellow !important;
+}
