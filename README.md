@@ -1,6 +1,5 @@
 # mancalaNg
-Play mancala in your web browser
-View the app on Heroku: [https://mancalang.herokuapp.com/](https://mancalang.herokuapp.com/)
+[Play mancala in your web browser](https://mancalang.herokuapp.com/)
 
 
 ## Technologies
