@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs';
@@ -12,6 +12,11 @@ import 'rxjs/add/operator/map';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'mancalaNg';
-  tagline = 'play mancala in your web browser';
+  private ViewContainerRef: ViewContainerRef;
+  public title: string = 'mancalaNg';
+  public tagline: string = 'play mancala in your web browser';
+
+  public constructor(ViewContainerRef: ViewContainerRef) {
+    this.ViewContainerRef = ViewContainerRef;
+  }
 }

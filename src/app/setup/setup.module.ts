@@ -9,4 +9,4 @@ import { SetupComponent } from './setup.component';
     exports: [ SetupComponent ],
     providers: [  ]
 })
-export class GameboardModule { }
+export class SetupModule { }
