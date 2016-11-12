@@ -1,4 +1,4 @@
-<div *ngIf="setupVisible" class="panel panel-info">
+<div *ngIf="this._visible" class="panel panel-info">
   <div class="panel-heading">
     <div class="panel-title">Choose Players</div>
   </div>
@@ -14,7 +14,7 @@
       </div>
     </form>
     <div style="margin-top:10px" class="form-group">
-      <button (click)="startGame()" class="btn btn-primary">Get Started!</button>
+      <button (click)="confirmGameStart($event)" class="btn btn-primary">Get Started!</button>
     </div>
   </div>
 </div>
