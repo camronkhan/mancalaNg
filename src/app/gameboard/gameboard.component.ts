@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { GameStartService } from '../services/game-start.service';
 import { Player } from '../models/player';
@@ -11,15 +11,13 @@ import { Player } from '../models/player';
 export class GameboardComponent implements OnInit, OnDestroy {
   private _visible: boolean;
   private _subscription: Subscription;
-  private _playerA: Player;
-  private _playerB: Player;
-  // @Input() private _players: Array<Player>;
 
-  constructor(private gameStartService: GameStartService) {
+  constructor(
+    private gameStartService: GameStartService,
+    @Inject('PlayerA') private _playerA: Player,
+    @Inject('PlayerB') private _playerB: Player)
+  {
     gameStartService.gameStartAnnounced$.subscribe(p => {
-      this._playerA = p[0];
-      this._playerB = p[1];
-      console.log(`p[0]: ${p[0].name}   p[1]: ${p[1].name}`);
       this._visible = true;
     });
   }

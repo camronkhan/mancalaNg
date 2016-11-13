@@ -23,6 +23,6 @@ export class AppComponent {
   }
 
   announceGameStart() {
-    this.gameStartService.announceGameStart(this._players);
+    this.gameStartService.announceGameStart();
   }
 }

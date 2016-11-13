@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-
 import { Player } from '../models/player';
 
 @Injectable()
@@ -13,11 +12,11 @@ export class GameStartService {
 
   constructor() { }
 
-  announceGameStart(players: Array<Player>) {
-    this.gameStartAnnouncedSource.next(players);
+  announceGameStart() {
+    this.gameStartAnnouncedSource.next();
   }
 
-  confirmGameStart(players: Array<Player>) {
-    this.gameStartConfirmedSource.next(players);
+  confirmGameStart() {
+    this.gameStartConfirmedSource.next();
   }
 }

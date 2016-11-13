@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { GameboardModule } from './gameboard/gameboard.module';
 import { SetupModule } from './setup/setup.module';
 import { AppComponent } from './app.component';
+import { Player } from './models/player';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,10 @@ import { AppComponent } from './app.component';
     GameboardModule,
     SetupModule
   ],
-  providers: [],
+  providers: [
+    { provide: 'PlayerA', useClass: Player },
+    { provide: 'PlayerB', useClass: Player }
+  ],
   bootstrap: [
     AppComponent
   ]
