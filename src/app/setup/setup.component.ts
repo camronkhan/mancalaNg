@@ -22,13 +22,9 @@ export class SetupComponent implements OnInit, OnDestroy {
     this._visible = true;
   }
 
-  confirmGameStart(event) {
+  onSubmit() {
     this._visible = false;
-    this._playerA.name = 'Camron';
-    this._playerB.name = 'Toni';
     this._playerA.turn = true;
-    console.log(`A: ${this._playerA.turn}   B: ${this._playerB.turn}`);
-    console.log(`this._playerA.name: ${this._playerA.name}   this._playerB.name: ${this._playerB.name}`);
     this.gameStartService.confirmGameStart();
   }
 
