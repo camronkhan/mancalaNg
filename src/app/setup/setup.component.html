@@ -15,6 +15,7 @@
           <input [(ngModel)]="_playerB.name" #playerBName="ngModel" type="text" class="form-control" name="player2" placeholder="Player two's name" required>
         </div>
         <div [hidden]="playerBName.valid || playerBName.pristine" class="alert alert-danger">Player two's name is required</div>
+        <div [hidden]="haveDifferentNames() || (playerAName.pristine && playerBName.pristine)" class="alert alert-danger">Players must have different names</div>
       </form>
       <div style="margin-top:10px" class="form-group text-center">
         <button (click)="onSubmit()" [disabled]="!setupForm.form.valid" type="submit" class="btn btn-primary">Get Started!</button>

@@ -31,4 +31,11 @@ export class SetupComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._subscription.unsubscribe();
   }
+
+  haveDifferentNames(): boolean {
+    if (this._playerA.name !== this._playerB.name) {
+      return true;
+    }
+    return false;
+  }
 }
