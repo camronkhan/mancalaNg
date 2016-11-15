@@ -26,7 +26,6 @@ export class GameboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._gameboardVisible = false;
-    this._gameboard.
   }
 
   ngOnDestroy() {
