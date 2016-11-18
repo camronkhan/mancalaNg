@@ -27,6 +27,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._gameboardVisible = false;
+    this._playerA.turn = true;
     this._playerAPockets = [4, 4, 4, 4, 4, 4];
     this._playerBPockets = [4, 4, 4, 4, 4, 4];
   }
@@ -35,20 +36,19 @@ export class GameboardComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
-    pocketClicked(event) {
-        let ownPocket: boolean = this.checkIfOwnPocket(event);
+    pocketClicked(pocket: string) {
+        let ownPocket: boolean = this.checkIfOwnPocket(pocket);
         if (!ownPocket) { return; }
 
-        let player: string = event.slice(0, 1).toLowerCase();
-        let pocket: number = Number(event.slice(-1));
-        let numStones: number = this.removeStonesFromPocket(event);
+        let pocketLtr: string = pocket.slice(0, 1).toLowerCase();
+        let pocketNum: number = Number(pocket.slice(-1));
+        let numStones: number = this.removeStonesFromPocket(pocket);
 
-        //TODO: Finish game logic
+        console.log(`Pocket ${pocket} clicked, and ${numStones} were picked up.`);
     }
 
-    checkIfOwnPocket(p: string): boolean {
-        let player: string = p.slice(0, 1).toLowerCase();
-        let pocket: number = Number(p.slice(-1));
+    checkIfOwnPocket(pocket: string): boolean {
+        let player: string = pocket.slice(0, 1).toLowerCase();
         let currentPlayer = this.getCurrentPlayer();
         if (player === currentPlayer) { return true; }
         return false;
