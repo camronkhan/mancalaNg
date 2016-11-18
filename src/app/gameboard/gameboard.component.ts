@@ -35,6 +35,35 @@ export class GameboardComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
+    pocketClicked(event) {
+        let ownPocket: boolean = this.checkIfOwnPocket(event);
+        if (!ownPocket) { return; }
+
+        let player: string = event.slice(0, 1).toLowerCase();
+        let pocket: number = Number(event.slice(-1));
+        let numStones: number = this.removeStonesFromPocket(event);
+
+        //TODO: Finish game logic
+    }
+
+    checkIfOwnPocket(p: string): boolean {
+        let player: string = p.slice(0, 1).toLowerCase();
+        let pocket: number = Number(p.slice(-1));
+        let currentPlayer = this.getCurrentPlayer();
+        if (player === currentPlayer) { return true; }
+        return false;
+    }
+
+    getCurrentPlayer(): string {
+        if (this._playerA.turn && !this._playerB.turn) {
+            return 'a';
+        } else if (this._playerB.turn && !this._playerA.turn) {
+            return 'b';
+        } else {
+            throw new Error('Player turns unsynchronized')
+        }
+    }
+
   getStonesInPocket(p: string): number {
         let player: string = p.slice(0, 1).toLowerCase();
         let pocket: number = Number(p.slice(-1));
