@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { GameStartService } from './services/game-start.service';
+import { GameRestartService } from './services/game-restart.service';
 import { GameOverService } from './services/game-over.service';
 import { Player } from './models/player';
 
@@ -16,10 +17,19 @@ export class AppComponent {
   tagline: string = 'play mancala in your web browser';
   @Input() private _players: Array<Player>;
 
-  constructor(private _gameStartService: GameStartService, private _gameOverService: GameOverService) {
+  constructor(
+    private _gameStartService: GameStartService,
+    private _gameRestartService: GameRestartService,
+    private _gameOverService: GameOverService
+  ) {
     this._gameStartService.gameStartConfirmed$.subscribe(p => {
       this._players = p;
       this.announceGameStart();
+    });
+
+    this._gameRestartService.gameRestartConfirmed$.subscribe(p => {
+      this._players = p;
+      this.announceGameRestart();
     });
 
     this._gameOverService.gameOverConfirmed$.subscribe(p => {
@@ -32,8 +42,11 @@ export class AppComponent {
     this._gameStartService.announceGameStart();
   }
 
+  announceGameRestart() {
+    this._gameRestartService.announceGameRestart();
+  }
+
   announceGameOver() {
-    console.log('Game Over Announced');
     this._gameOverService.announceGameOver();
   }
 }

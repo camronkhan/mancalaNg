@@ -21,6 +21,14 @@ export class Player {
         return this._score;
     }
 
+    set score(s: number) {
+        this._score = s;
+    }
+
+    resetScore() {
+        this._score = 0;
+    }
+
     incrementScore() {
         this._score++;
     }

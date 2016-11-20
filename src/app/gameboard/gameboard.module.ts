@@ -4,6 +4,7 @@ import { SetupModule } from '../setup/setup.module';
 import { GameboardComponent } from './gameboard.component';
 import { HighlightDirective } from '../directives/highlight.directive';
 import { GameStartService } from '../services/game-start.service';
+import { GameRestartService } from '../services/game-restart.service';
 import { GameOverService } from '../services/game-over.service';
 import { Gameboard } from '../models/gameboard';
 
@@ -11,6 +12,6 @@ import { Gameboard } from '../models/gameboard';
     imports: [ CommonModule, SetupModule ],
     declarations: [ GameboardComponent, HighlightDirective ],
     exports: [ GameboardComponent ],
-    providers: [ HighlightDirective, GameStartService, GameOverService, Gameboard ]
+    providers: [ HighlightDirective, GameStartService, GameRestartService, GameOverService, Gameboard ]
 })
 export class GameboardModule { }

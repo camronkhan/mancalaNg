@@ -4,21 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { GameboardModule } from './gameboard/gameboard.module';
 import { SetupModule } from './setup/setup.module';
+import { SummaryModule } from './summary/summary.module';
 import { AppComponent } from './app.component';
 import { Player } from './models/player';
-import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SummaryComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     GameboardModule,
-    SetupModule
+    SetupModule,
+    SummaryModule
   ],
   providers: [
     { provide: 'PlayerA', useClass: Player },
