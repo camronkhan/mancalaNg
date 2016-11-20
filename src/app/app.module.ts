@@ -6,7 +6,7 @@ import { GameboardModule } from './gameboard/gameboard.module';
 import { SetupModule } from './setup/setup.module';
 import { AppComponent } from './app.component';
 import { Player } from './models/player';
-import { SummaryComponent } from './summary/summary/summary.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
   declarations: [

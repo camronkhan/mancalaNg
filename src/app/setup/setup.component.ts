@@ -9,7 +9,7 @@ import { Player } from '../models/player';
   styleUrls: ['./setup.component.css']
 })
 export class SetupComponent implements OnInit, OnDestroy {
-  private _visible: boolean;
+  private _setupVisible: boolean;
   private _subscription: Subscription;
 
   constructor(
@@ -19,11 +19,11 @@ export class SetupComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this._visible = true;
+    this._setupVisible = true;
   }
 
   onSubmit() {
-    this._visible = false;
+    this._setupVisible = false;
     this._playerA.turn = true;
     this.gameStartService.confirmGameStart();
   }

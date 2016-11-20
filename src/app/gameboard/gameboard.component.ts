@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { GameStartService } from '../services/game-start.service';
+import { GameOverService } from '../services/game-over.service';
 import { Player } from '../models/player';
 import { Gameboard } from '../models/gameboard';
 
@@ -16,6 +17,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private _gameStartService: GameStartService,
+        private _gameOverService: GameOverService,
         @Inject('PlayerA') private _playerA: Player,
         @Inject('PlayerB') private _playerB: Player
     ) { this._gameStartService.gameStartAnnounced$.subscribe(p => { this._gameboardVisible = true; }); }
@@ -30,6 +32,12 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._subscription.unsubscribe();
     }
 
+    gameOver() {
+        console.log('Game Over Confirmed');
+        this._gameboardVisible = false;
+        this._gameOverService.confirmGameOver();
+    }
+
     pocketClicked(pocket: number) {
         // if player clicks on opponent's or empty pocket, do nothing
         let isOwnPocket: boolean = this.checkIfOwnPocket(pocket);
@@ -39,6 +47,23 @@ export class GameboardComponent implements OnInit, OnDestroy {
         let endPosition: number = this.distributeStones(pocket, stones);
         let currentPlayer: number = this.getCurrentPlayer();
         let currentMancala = this.getCurrentMancala(currentPlayer);
+
+        // if one player's pockets are all empty, game over
+        if (this._gameboard[0] === 0 &&
+            this._gameboard[1] === 0 &&
+            this._gameboard[2] === 0 &&
+            this._gameboard[3] === 0 &&
+            this._gameboard[4] === 0 &&
+            this._gameboard[5] === 0
+        ) { this.gameOver(); }
+
+        if (this._gameboard[7] === 0 &&
+            this._gameboard[8] === 0 &&
+            this._gameboard[9] === 0 &&
+            this._gameboard[10] === 0 &&
+            this._gameboard[11] === 0 &&
+            this._gameboard[12] === 0
+        ) { this.gameOver(); }
 
         // if player lands in own mancala, it remains same player's turn
         if (endPosition === currentMancala) {
