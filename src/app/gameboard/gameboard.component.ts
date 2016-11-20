@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { GameStartService } from '../services/game-start.service';
 import { Player } from '../models/player';
-// import { Gameboard } from '../models/gameboard';
+import { Gameboard } from '../models/gameboard';
 
 @Component({
     selector: 'app-gameboard',
@@ -12,191 +12,163 @@ import { Player } from '../models/player';
 export class GameboardComponent implements OnInit, OnDestroy {
     private _gameboardVisible: boolean;
     private _subscription: Subscription;
-    private _playerAPockets: Array<number>;
-    private _playerBPockets: Array<number>;
+    private _gameboard: Array<number>;
 
-    constructor(private gameStartService: GameStartService, @Inject('PlayerA') private _playerA: Player, @Inject('PlayerB') private _playerB: Player) {
-        gameStartService.gameStartAnnounced$.subscribe(p => { this._gameboardVisible = true; });
-    }
+    constructor(
+        private _gameStartService: GameStartService,
+        @Inject('PlayerA') private _playerA: Player,
+        @Inject('PlayerB') private _playerB: Player
+    ) { this._gameStartService.gameStartAnnounced$.subscribe(p => { this._gameboardVisible = true; }); }
 
     ngOnInit() {
         this._gameboardVisible = false;
         this._playerA.turn = true;
-        this._playerAPockets = [4, 4, 4, 4, 4, 4];
-        this._playerBPockets = [4, 4, 4, 4, 4, 4];
+        this._gameboard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
     }
 
     ngOnDestroy() {
         this._subscription.unsubscribe();
     }
 
-    pocketClicked(pocket: string) {
-        let ownPocket: boolean = this.checkIfOwnPocket(pocket);
-        if (!ownPocket) { return; }
+    pocketClicked(pocket: number) {
+        // if player clicks on opponent's or empty pocket, do nothing
+        let isOwnPocket: boolean = this.checkIfOwnPocket(pocket);
+        if (!isOwnPocket || this._gameboard[pocket] === 0) { return; }
 
-        let pocketLtr: string = pocket.slice(0, 1).toLowerCase();
-        let pocketNum: number = Number(pocket.slice(-1));
-        let numStones: number = this.removeStonesFromPocket(pocket);
+        let stones: number = this.removeStonesFromPocket(pocket);
+        let endPosition: number = this.distributeStones(pocket, stones);
+        let currentPlayer: number = this.getCurrentPlayer();
+        let currentMancala = this.getCurrentMancala(currentPlayer);
 
-        console.log(`Pocket ${pocket} clicked, and ${numStones} were picked up.`);
+        // if player lands in own mancala, it remains same player's turn
+        if (endPosition === currentMancala) {
+            console.log(`Pocket clicked: ${pocket}\nStones retrieved: ${stones}\nEnd Position: ${endPosition}\nNext player: ${currentPlayer}`);
+            return; }
+
+        let nextPlayer = this.changeCurrentPlayer(currentPlayer);
+
+        console.log(`Pocket clicked: ${pocket}\nStones retrieved: ${stones}\nEnd Position: ${endPosition}\nNext player: ${nextPlayer}`);
     }
 
-    checkIfOwnPocket(pocket: string): boolean {
-        let player: string = pocket.slice(0, 1).toLowerCase();
-        let currentPlayer = this.getCurrentPlayer();
-        if (player === currentPlayer) { return true; }
+    checkIfOwnPocket(pocket: number): boolean {
+        let currentPlayer: number = this.getCurrentPlayer();
+        let playerPocket: number = Math.floor(pocket / 7);
+        if (playerPocket === currentPlayer) { return true; }
         return false;
     }
 
-    getCurrentPlayer(): string {
+    getCurrentPlayer(): number {
         if (this._playerA.turn && !this._playerB.turn) {
-            return 'a';
+            return 0;
         } else if (this._playerB.turn && !this._playerA.turn) {
-            return 'b';
+            return 1;
         } else {
             throw new Error('Player turns unsynchronized')
         }
     }
 
-    distributeStones(pocket: string, stones: number): string {
-        let initialPocketLtr: string = pocket.slice(0, 1).toLowerCase();
-        let initialPocketNum: number = Number(pocket.slice(-1));
-        let currentPocketLtr: string = initialPocketLtr;
-        let currentPocketNum: number = initialPocketNum;
-        let finalPocketLtr: string;
-        let finalPocketNum: number;
-        let currentPlayer = this.getCurrentPlayer();
+    getOpposingPlayer(currentPlayer: number): number {
+        switch (currentPlayer) {
+            case 0:
+                return 1;
+            case 1:
+                return 0;
+            default:
+                throw new Error('Current player is not set to 0 or 1');
+        }
+    }
+
+    removeStonesFromPocket(pocket: number): number {
+        let stones: number = this._gameboard[pocket];
+        this._gameboard[pocket] = 0;
+        return stones;
+    }
+
+    distributeStones(pocket: number, stones: number): number {
+        let currentPosition: number = pocket;
         let remainingStones: number = stones;
-        const numTotalPockets = 6;
+        let currentPlayer: number = this.getCurrentPlayer();
+        let currentMancala: number = this.getCurrentMancala(currentPlayer);
+        let opponentMancala: number = this.getOpponentMancala(currentPlayer);
 
+        // loop while stones remain
         while (remainingStones > 0) {
-            console.log(`Starting pocket: ${currentPocketLtr}${currentPocketNum}\nRemaining stones: ${remainingStones}`);
+            // move to next position
+            currentPosition++;
 
-            // move to next pocket
-            currentPocketNum++;  // A4 = pocket[3]
+            // if end of array reached, move to beginning
+            if (currentPosition > 13) { currentPosition = 0; }
 
-            // distribute to player's own pockets
-            for (let i = currentPocketNum; i <= numTotalPockets; i++) {
-                if (remainingStones <= 0) { break; }
-                this.incrementStonesInPocket(currentPocketLtr, i);
+            // only increment stone count if current position is not opponent's mancala
+            if (currentPosition !== opponentMancala) {
+                this._gameboard[currentPosition]++;
                 remainingStones--;
-                currentPocketNum = i;
-                console.log(`Incremented pocket: ${currentPocketLtr}${currentPocketNum}\nRemaining stones: ${remainingStones}`);
-            }
-
-            // increment own mancala
-            if (remainingStones <= 0) { break; }
-            switch (currentPlayer) {
-                case 'a':
-                    this._playerA.incrementScore();
-                    remainingStones--;
-                    currentPocketNum = -1;
-                    console.log(`Incremented mancala: a\nRemaining stones: ${remainingStones}`);
-                    break;
-                case 'b':
-                    this._playerB.incrementScore();
-                    remainingStones--;
-                    currentPocketNum = -1;
-                    console.log(`Incremented mancala: b\nRemaining stones: ${remainingStones}`);
-                    break;
-                default:
-                    throw new Error('Player letter returned value other than A or B');
-            }
-
-            // distribute to opponent's pockets but skip opponenet's mancala
-            if (remainingStones <= 0) {
-                break;
-            } else {
-                // change current pocket letter to opponent's letter
-                currentPocketLtr = currentPocketLtr === 'a' ? 'b' : 'a';
-                currentPocketNum = 1;
-                console.log(`Updated pocket letter: ${currentPocketLtr}`);
-
-                // distribute
-                for (let i = 1; i <= numTotalPockets; i++) {
-                    if (remainingStones <= 0) { break; }
-                    this.incrementStonesInPocket(currentPocketLtr, i);
-                    remainingStones--;
-                    currentPocketNum = i;
-                    console.log(`Incremented pocket: ${currentPocketLtr}${currentPocketNum}\nRemaining stones: ${remainingStones}`);
-                }
-
-                // revert pocket letter to current player's letter
-                currentPocketLtr = currentPocketLtr === 'a' ? 'b' : 'a';
-                console.log(`Updated pocket letter: ${currentPocketLtr}`);
             }
         }
 
-        // switch current player
+        // if last stone placed in own empty pocket, get contents of own pocket and of opponent's cross-pocket
+        let isOwnPocket = this.checkIfOwnPocket(currentPosition);
+        let isMancala = this.checkIfMancala(currentPosition);
+        if (isOwnPocket && !isMancala && this._gameboard[currentPosition] === 1) {
+            // own current pocket
+            this._gameboard[currentMancala]++;
+            this._gameboard[currentPosition]--;
+
+            // opponent's cross pocket
+            let crossPocket: number = this.getCrossPocket(currentPosition);
+            this._gameboard[currentMancala] += this._gameboard[crossPocket];
+            this._gameboard[crossPocket] = 0;
+        }
+
+        return currentPosition;
+    }
+
+    getCurrentMancala(currentPlayer: number): number {
         switch (currentPlayer) {
-            case 'a':
+            case 0:
+                return 6;
+            case 1:
+                return 13;
+            default:
+                throw new Error('Current player is not set to 0 or 1');
+        }
+    }
+
+    getOpponentMancala(currentPlayer: number): number {
+        switch (currentPlayer) {
+            case 0:
+                return 13;
+            case 1:
+                return 6;
+            default:
+                throw new Error('Current player is not set to 0 or 1');
+        }
+    }
+
+    changeCurrentPlayer(currentPlayer): number {
+        switch (currentPlayer) {
+            case 0:
                 this._playerA.turn = false;
                 this._playerB.turn = true;
-                break;
-            case 'b':
+                return 1;
+            case 1:
                 this._playerA.turn = true;
                 this._playerB.turn = false;
-                break;
+                return 0;
             default:
-                throw new Error('Player letter returned value other than A or B');
-        }
-
-        return '';
-    }
-
-  getNumStonesInPocket(p: string): number {
-        let player: string = p.slice(0, 1).toLowerCase();
-        let pocket: number = Number(p.slice(-1));
-
-        switch (player) {
-            case 'a':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                return this._playerAPockets[pocket - 1];
-            case 'b':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                return this._playerBPockets[pocket - 1];
-            default:
-                throw new Error('Player letter returned value other than A or B');
+                throw new Error('Current player is not set to 0 or 1');
         }
     }
 
-    incrementStonesInPocket(pocketLtr: string, pocketNum: number) {
-        let player: string = pocketLtr;
-        let pocket: number = pocketNum;
-
-        switch (player) {
-            case 'a':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                this._playerAPockets[pocket - 1]++;
-                break;
-            case 'b':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                this._playerBPockets[pocket - 1]++;
-                break;
-            default:
-                throw new Error('Player letter returned value other than A or B');
+    getCrossPocket(pocket: number): number {
+        if ((pocket >= 0 && pocket <= 5) || (pocket >= 7 && pocket <= 12)) {
+            return (pocket + 12) - (pocket * 2);
+        } else {
+            throw new Error('Pocket provided is either a mancala or out of bounds');
         }
     }
 
-    removeStonesFromPocket(p: string): number {
-        let player: string = p.slice(0, 1).toLowerCase();
-        let pocket: number = Number(p.slice(-1));
-        let numStones = 0;
-
-        switch (player) {
-            case 'a':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                numStones = this._playerAPockets[pocket - 1];
-                this._playerAPockets[pocket - 1] = 0;
-                break;
-            case 'b':
-                if (pocket < 1 || pocket > 6) { throw new Error('Pocket number less than 1 or greater than 6'); }
-                this._playerBPockets[pocket - 1] = 0;
-                numStones = this._playerAPockets[pocket - 1];
-                break;
-            default:
-                throw new Error('Player letter returned value other than A or B');
-        }
-        return numStones;
+    checkIfMancala(pocket: number): boolean {
+        return (pocket === 6 || pocket === 13) ? true : false;
     }
 }
