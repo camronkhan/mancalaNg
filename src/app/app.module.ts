@@ -7,12 +7,10 @@ import { SetupModule } from './setup/setup.module';
 import { SummaryModule } from './summary/summary.module';
 import { AppComponent } from './app.component';
 import { Player } from './models/player';
-import { HistoryComponent } from './history/history.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HistoryComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
