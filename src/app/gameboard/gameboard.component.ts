@@ -5,6 +5,7 @@ import { GameRestartService } from '../services/game-restart.service';
 import { GameOverService } from '../services/game-over.service';
 import { Player } from '../models/player';
 import { Gameboard } from '../models/gameboard';
+import { ScoreboardComponent } from '../scoreboard/scoreboard.component';
 
 @Component({
     selector: 'app-gameboard',

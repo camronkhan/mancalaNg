@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { Player } from '../models/player';
 
 @Component({
   selector: 'app-scoreboard',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ScoreboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    @Inject('PlayerA') private _playerA: Player,
+    @Inject('PlayerB') private _playerB: Player
+  ) { }
 
   ngOnInit() {
   }
