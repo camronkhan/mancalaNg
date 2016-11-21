@@ -7,10 +7,12 @@ import { SetupModule } from './setup/setup.module';
 import { SummaryModule } from './summary/summary.module';
 import { AppComponent } from './app.component';
 import { Player } from './models/player';
+import { ScoreboardComponent } from './scoreboard/scoreboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ScoreboardComponent
   ],
   imports: [
     BrowserModule,
