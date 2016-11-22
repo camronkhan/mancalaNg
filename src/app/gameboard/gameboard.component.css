@@ -14,9 +14,18 @@
 .row {
 	margin-bottom: 20px !important;
 }
-#history-container {
-	padding-right: 0;
-}
+#history-container,
 #instructions-container {
+	padding-right: 0;
 	padding-left: 0;
+}
+@media only screen and (min-width : 768px) {
+	#history-container {
+		padding-right: 0;
+		padding-left: 10px;
+	}
+	#instructions-container {
+		padding-right: 10px;
+		padding-left: 0;
+	}
 }
