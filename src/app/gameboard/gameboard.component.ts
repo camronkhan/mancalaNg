@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { GameStartService } from '../services/game-start.service';
 import { GameRestartService } from '../services/game-restart.service';
 import { GameOverService } from '../services/game-over.service';
+import { HistoryService } from '../services/history.service';
 import { Player } from '../models/player';
 import { Gameboard } from '../models/gameboard';
 import { ScoreboardComponent } from '../scoreboard/scoreboard.component';
@@ -22,6 +23,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
         private _gameStartService: GameStartService,
         private _gameRestartService: GameRestartService,
         private _gameOverService: GameOverService,
+        private _historyService: HistoryService,
         @Inject('PlayerA') private _playerA: Player,
         @Inject('PlayerB') private _playerB: Player
     ) {
