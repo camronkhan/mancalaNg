@@ -60,7 +60,11 @@ export class GameboardComponent implements OnInit, OnDestroy {
         let isOwnPocket: boolean = this.checkIfOwnPocket(pocket);
         if (!isOwnPocket || this._gameboard[pocket] === 0) { return; }
 
+        let currentPlayerName = this.getCurrentPlayerName();
         let stones: number = this.removeStonesFromPocket(pocket);
+        this._historyService
+            .add(`${currentPlayerName} picked up ${stones} stones from pocket ${this.getPositionName(pocket)}.`);
+
         let endPosition: number = this.distributeStones(pocket, stones);
         this.updateScores();
 
@@ -85,13 +89,16 @@ export class GameboardComponent implements OnInit, OnDestroy {
         let currentPlayer: number = this.getCurrentPlayer();
         let currentMancala = this.getCurrentMancala(currentPlayer);
         if (endPosition === currentMancala) {
-            console.log(`Pocket clicked: ${pocket}\nStones retrieved: ${stones}\nEnd Position: ${endPosition}\nNext player: ${currentPlayer}`);
-            return; }
+            this._historyService
+                .add(`${currentPlayerName} landed on ${this.getPositionName(endPosition)}. Take another turn!`);
+            return;
+        }
 
         // change current player
+        let opponent: string = this.getOpposingPlayerName();
+        this._historyService
+            .add(`${currentPlayerName} landed on ${this.getPositionName(endPosition)}. ${opponent}, it's your turn!`);
         let nextPlayer = this.changeCurrentPlayer(currentPlayer);
-
-        console.log(`Pocket clicked: ${pocket}\nStones retrieved: ${stones}\nEnd Position: ${endPosition}\nNext player: ${nextPlayer}`);
     }
 
     checkIfOwnPocket(pocket: number): boolean {
@@ -111,6 +118,16 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    getCurrentPlayerName(): string {
+        if (this._playerA.turn && !this._playerB.turn) {
+            return this._playerA.name;
+        } else if (this._playerB.turn && !this._playerA.turn) {
+            return this._playerB.name;
+        } else {
+            throw new Error('Player turns unsynchronized')
+        }
+    }
+
     getOpposingPlayer(currentPlayer: number): number {
         switch (currentPlayer) {
             case 0:
@@ -119,6 +136,16 @@ export class GameboardComponent implements OnInit, OnDestroy {
                 return 0;
             default:
                 throw new Error('Current player is not set to 0 or 1');
+        }
+    }
+
+    getOpposingPlayerName(): string {
+        if (this._playerA.turn && !this._playerB.turn) {
+            return this._playerB.name;
+        } else if (this._playerB.turn && !this._playerA.turn) {
+            return this._playerA.name;
+        } else {
+            throw new Error('Player turns unsynchronized')
         }
     }
 
@@ -132,6 +159,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
         let currentPosition: number = pocket;
         let remainingStones: number = stones;
         let currentPlayer: number = this.getCurrentPlayer();
+        let currentPlayerName: string = this.getCurrentPlayerName();
         let currentMancala: number = this.getCurrentMancala(currentPlayer);
         let opponentMancala: number = this.getOpponentMancala(currentPlayer);
 
@@ -147,6 +175,11 @@ export class GameboardComponent implements OnInit, OnDestroy {
             if (currentPosition !== opponentMancala) {
                 this._gameboard[currentPosition]++;
                 remainingStones--;
+
+                // announce point scored
+                if (this._gameboard[currentPosition] === 6 || this._gameboard[currentPosition] === 13) {
+                    this._historyService.add(`${currentPlayerName} scored a point!`);
+                }
             }
         }
 
@@ -209,6 +242,20 @@ export class GameboardComponent implements OnInit, OnDestroy {
             return (pocket + 12) - (pocket * 2);
         } else {
             throw new Error('Pocket provided is either a mancala or out of bounds');
+        }
+    }
+
+    getPositionName(position: number): string {
+        if (position >= 0 && position <= 5) {
+            return 'A' + (position + 1);
+        } else if (position === 6) {
+            return 'Mancala A';
+        } else if (position >= 7 && position <= 12) {
+            return 'B' + (position - 6);
+        } else if (position === 13) {
+            return 'Mancala B';
+        } else {
+            throw new Error('Position provided is out of bounds');
         }
     }
 

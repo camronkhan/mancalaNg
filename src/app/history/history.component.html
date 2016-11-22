@@ -1,6 +1,10 @@
 <div class="panel panel-default">
   <div class="container">
-    <h1 class="h3">History</h1>
-    <p>{{ this._historyService.history }}</p>
+    <h1 class="h3">Game History</h1>
+    <ul>
+      <li *ngFor="let action of this._historyService.history">
+        {{ action }}
+      </li>
+    </ul>
   </div>
 </div>

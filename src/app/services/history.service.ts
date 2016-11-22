@@ -3,15 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class HistoryService {
 
-  private _history: string;
+  private _history: Array<string>;
 
-  constructor() { this._history = 'Let\'s play Mancala!\n'; }
+  constructor() {
+    this._history = [];
+    this._history.push('Let\'s play Mancala!');
+  }
 
-  get history(): string {
+  get history(): Array<string> {
     return this._history;
   }
 
-  set history(s: string) {
-    this._history = s + '\n';
+  add(s: string) {
+    this._history.push(s);
   }
 }
