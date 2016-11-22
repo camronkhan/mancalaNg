@@ -1,4 +1,4 @@
-.gameboard {
+.board {
 	fill:#8D5B33;
 }
 .mancala,
@@ -9,5 +9,14 @@
   fill: yellow !important;
 }
 .game {
-	margin-top: 50px;
+	margin-top: 10px;
+}
+.row {
+	margin-bottom: 20px !important;
+}
+#history-container {
+	padding-right: 0;
+}
+#instructions-container {
+	padding-left: 0;
 }

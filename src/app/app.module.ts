@@ -7,12 +7,10 @@ import { SetupModule } from './setup/setup.module';
 import { SummaryModule } from './summary/summary.module';
 import { AppComponent } from './app.component';
 import { Player } from './models/player';
-import { InstructionsComponent } from './instructions/instructions.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    InstructionsComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
