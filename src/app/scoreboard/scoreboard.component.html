@@ -5,10 +5,16 @@
         <div class="h3">Scoreboard</div>
       </div>
       <div class="col-sm-4">
-        <div class="h3">{{this._playerA.name}}: {{this._playerA.score}}</div>
+        <div class="h3">
+          <span>{{this._playerA.name}}: {{this._playerA.score}}</span>
+          <span *ngIf="this._playerA.turn" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        </div>
       </div>
       <div class="col-sm-4">
-        <div class="h3">{{this._playerB.name}}: {{this._playerB.score}}</div>
+        <div class="h3">
+          <span>{{this._playerB.name}}: {{this._playerB.score}}</span>
+          <span *ngIf="this._playerB.turn" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        </div>
       </div>
     </div>
   </div>
