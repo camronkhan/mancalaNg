@@ -1,9 +1,8 @@
-.board {
-	fill:#8D5B33;
+#board-container {
+	background-color:#8D5B33;
 }
-.mancala,
-.pocket {
-	fill:#C49A6C;
+#mancalaA {
+	background-color:#C49A6C !important;
 }
 .hover {
   fill: yellow !important;
