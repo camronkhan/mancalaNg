@@ -35,6 +35,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._gameboardVisible = false;
         this._playerA.turn = true;
         this._gameboard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
+        this._historyService.history.push('Let\'s play Mancala!');
     }
 
     ngOnDestroy() {
@@ -47,6 +48,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._playerA.turn = true;
         this._playerB.turn = false;
         this._gameboard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
+        while (this._historyService.history.length > 0) {
+            this._historyService.history.pop();
+        }
+        this._historyService.history.push('Let\'s play Mancala!');
         this._gameboardVisible = true;
     }
 
@@ -66,7 +71,6 @@ export class GameboardComponent implements OnInit, OnDestroy {
             .add(`${currentPlayerName} picked up ${stones} stones from pocket ${this.getPositionName(pocket)}.`);
 
         let endPosition: number = this.distributeStones(pocket, stones);
-        this.updateScores();
 
         // if one player's pockets are all empty, game over
         if (this._gameboard[0] === 0 &&
@@ -75,7 +79,15 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this._gameboard[3] === 0 &&
             this._gameboard[4] === 0 &&
             this._gameboard[5] === 0
-        ) { this.endGame(); }
+        ) {
+            this._gameboard[13] += this._gameboard[7];
+            this._gameboard[13] += this._gameboard[8];
+            this._gameboard[13] += this._gameboard[9];
+            this._gameboard[13] += this._gameboard[10];
+            this._gameboard[13] += this._gameboard[11];
+            this._gameboard[13] += this._gameboard[12];
+            this.endGame();
+        }
 
         if (this._gameboard[7] === 0 &&
             this._gameboard[8] === 0 &&
@@ -83,7 +95,17 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this._gameboard[10] === 0 &&
             this._gameboard[11] === 0 &&
             this._gameboard[12] === 0
-        ) { this.endGame(); }
+        ) {
+            this._gameboard[6] += this._gameboard[0];
+            this._gameboard[6] += this._gameboard[1];
+            this._gameboard[6] += this._gameboard[2];
+            this._gameboard[6] += this._gameboard[3];
+            this._gameboard[6] += this._gameboard[4];
+            this._gameboard[6] += this._gameboard[5];
+            this.endGame();
+        }
+
+        this.updateScores();
 
         // if player lands in own mancala, it remains same player's turn
         let currentPlayer: number = this.getCurrentPlayer();

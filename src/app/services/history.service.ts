@@ -7,7 +7,6 @@ export class HistoryService {
 
   constructor() {
     this._history = [];
-    this._history.push('Let\'s play Mancala!');
   }
 
   get history(): Array<string> {
