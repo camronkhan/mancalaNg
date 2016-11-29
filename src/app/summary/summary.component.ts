@@ -57,4 +57,9 @@ export class SummaryComponent implements OnInit, OnDestroy {
     if (this._playerA.score > this._playerB.score) { return this._playerB.score; }
     return this._playerA.score;
   }
+
+  isDraw(): boolean {
+    if (this._playerA.score === this._playerB.score) { return true; }
+    return false;
+  }
 }
