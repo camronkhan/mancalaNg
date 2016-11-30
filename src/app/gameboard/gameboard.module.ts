@@ -10,12 +10,11 @@ import { GameStartService } from '../services/game-start.service';
 import { GameRestartService } from '../services/game-restart.service';
 import { GameOverService } from '../services/game-over.service';
 import { HistoryService } from '../services/history.service';
-import { Gameboard } from '../models/gameboard';
 
 @NgModule({
     imports: [ CommonModule, SetupModule, ScoreboardModule, HistoryModule, InstructionsModule ],
     declarations: [ GameboardComponent, HighlightDirective ],
     exports: [ GameboardComponent ],
-    providers: [ HighlightDirective, GameStartService, GameRestartService, GameOverService, HistoryService, Gameboard ]
+    providers: [ HighlightDirective, GameStartService, GameRestartService, GameOverService, HistoryService ]
 })
 export class GameboardModule { }
