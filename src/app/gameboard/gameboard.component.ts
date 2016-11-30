@@ -30,6 +30,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._gameRestartService.gameRestartAnnounced$.subscribe(p => { this.restartGame(); });
     }
 
+    /*
+    * Set starting values when gameboard component is initialized
+    * Requirement: 
+    */
     ngOnInit() {
         this._gameboardVisible = false;
         this._playerA.turn = true;
