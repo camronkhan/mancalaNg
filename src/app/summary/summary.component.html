@@ -5,8 +5,8 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <p *ngIf="!isDraw()" class="h3 text-center">The winner is {{ _winner }}!</p>
-        <p *ngIf="isDraw()" class="h3 text-center">{{ this._playerA.name }} and {{ this._playerB.name }} tied!</p>
+        <p *ngIf="!this._isDraw" class="h3 text-center">The winner is {{ _winner }}!</p>
+        <p *ngIf="this._isDraw" class="h3 text-center">{{ this._playerA.name }} and {{ this._playerB.name }} tied!</p>
       </div>
       <br>
       <div class="row">

@@ -15,6 +15,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   private _winner: string;
   private _winnerScore: number;
   private _loserScore: number;
+  private _isDraw: boolean;
 
   constructor(
     private _gameRestartService: GameRestartService,
@@ -26,6 +27,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
       this._winner = this.getWinner();
       this._winnerScore = this.getWinnerScore();
       this._loserScore = this.getLoserScore();
+      this._isDraw = this.checkIfDraw();
       this._summaryVisible = true;
     });
   }
@@ -58,7 +60,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
     return this._playerA.score;
   }
 
-  isDraw(): boolean {
+  checkIfDraw(): boolean {
     if (this._playerA.score === this._playerB.score) { return true; }
     return false;
   }
