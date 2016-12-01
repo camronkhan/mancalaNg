@@ -4,19 +4,27 @@ import { Player } from '../models/player';
 
 @Injectable()
 export class GameOverService {
-  private gameOverAnnouncedSource = new Subject<Array<Player>>();
-  private gameOverConfirmedSource = new Subject<Array<Player>>();
+    private gameOverAnnouncedSource = new Subject<Array<Player>>();
+    private gameOverConfirmedSource = new Subject<Array<Player>>();
 
-  gameOverAnnounced$ = this.gameOverAnnouncedSource.asObservable();
-  gameOverConfirmed$ = this.gameOverConfirmedSource.asObservable();
+    gameOverAnnounced$ = this.gameOverAnnouncedSource.asObservable();
+    gameOverConfirmed$ = this.gameOverConfirmedSource.asObservable();
 
-  constructor() { }
+    constructor() { }
 
-  announceGameOver() {
-    this.gameOverAnnouncedSource.next();
-  }
+    /*
+    * Emits an observable that announces to subscribers when a game ends
+    * Requirement: 
+    */
+    announceGameOver() {
+      this.gameOverAnnouncedSource.next();
+    }
 
-  confirmGameOver() {
-    this.gameOverConfirmedSource.next();
-  }
+    /*
+    * Emits an observable when it is convfirmed that a game has ended
+    * Requirement: 
+    */
+    confirmGameOver() {
+      this.gameOverConfirmedSource.next();
+    }
 }

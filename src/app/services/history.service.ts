@@ -3,17 +3,25 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class HistoryService {
 
-  private _history: Array<string>;
+    private _history: Array<string>;
 
-  constructor() {
-    this._history = [];
-  }
+    constructor() {
+      this._history = [];
+    }
 
-  get history(): Array<string> {
-    return this._history;
-  }
+    /*
+    * Retrieves the game history from the data source
+    * Requirement: 
+    */
+    get history(): Array<string> {
+      return this._history;
+    }
 
-  add(s: string) {
-    this._history.push(s);
-  }
+    /*
+    * Appends a new history event to the data source
+    * Requirement: 
+    */
+    add(s: string) {
+      this._history.push(s);
+    }
 }

@@ -4,19 +4,27 @@ import { Player } from '../models/player';
 
 @Injectable()
 export class GameRestartService {
-  private gameRestartAnnouncedSource = new Subject<Array<Player>>();
-  private gameRestartConfirmedSource = new Subject<Array<Player>>();
+    private gameRestartAnnouncedSource = new Subject<Array<Player>>();
+    private gameRestartConfirmedSource = new Subject<Array<Player>>();
 
-  gameRestartAnnounced$ = this.gameRestartAnnouncedSource.asObservable();
-  gameRestartConfirmed$ = this.gameRestartConfirmedSource.asObservable();
+    gameRestartAnnounced$ = this.gameRestartAnnouncedSource.asObservable();
+    gameRestartConfirmed$ = this.gameRestartConfirmedSource.asObservable();
 
-  constructor() { }
+    constructor() { }
 
-  announceGameRestart() {
-    this.gameRestartAnnouncedSource.next();
-  }
+    /*
+    * Emits an observable that announces to subscribers when a game restarts
+    * Requirement: 
+    */
+    announceGameRestart() {
+      this.gameRestartAnnouncedSource.next();
+    }
 
-  confirmGameRestart() {
-    this.gameRestartConfirmedSource.next();
-  }
+    /*
+    * Emits an observable when it is convfirmed that a game has restarted
+    * Requirement: 
+    */
+    confirmGameRestart() {
+      this.gameRestartConfirmedSource.next();
+    }
 }
