@@ -41,10 +41,18 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._historyService.history.push('Let\'s play Mancala!');
     }
 
+    /*
+    * Unsubscribe from subscriptions when component is destroyed
+    * Requirement: 
+    */
     ngOnDestroy() {
         this._subscription.unsubscribe();
     }
 
+    /*
+    * Resets gameboard, player attributes, and game history on restart
+    * Requirement: 
+    */
     restartGame() {
         this._playerA.resetScore();
         this._playerB.resetScore();
@@ -58,24 +66,35 @@ export class GameboardComponent implements OnInit, OnDestroy {
         this._gameboardVisible = true;
     }
 
+    /*
+    * Hide gameboard and emit game over observable when game ends
+    * Requirement: 
+    */
     endGame() {
         this._gameboardVisible = false;
         this._gameOverService.confirmGameOver();
     }
 
+    /*
+    * When a user clicks a pocket remove stones and distribute them among the gameboard
+    * Requirement: 
+    */
     pocketClicked(pocket: number) {
         // if player clicks on opponent's or empty pocket, do nothing
         let isOwnPocket: boolean = this.checkIfOwnPocket(pocket);
         if (!isOwnPocket || this._gameboard[pocket] === 0) { return; }
 
+        // pick up stones
         let currentPlayerName = this.getCurrentPlayerName();
         let stones: number = this.removeStonesFromPocket(pocket);
         this._historyService
             .add(`${currentPlayerName} picked up ${stones} stones from pocket ${this.getPositionName(pocket)}.`);
 
+        // distribute stones and determine ending position
         let endPosition: number = this.distributeStones(pocket, stones);
 
-        // if one player's pockets are all empty, game over
+        // if Player A's pockets are all empty, added stones in Player B's pockets to Player B's score
+        // then game over
         if (this._gameboard[0] === 0 &&
             this._gameboard[1] === 0 &&
             this._gameboard[2] === 0 &&
@@ -92,6 +111,8 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this.endGame();
         }
 
+        // if Player B's pockets are all empty, added stones in Player A's pockets to Player A's score
+        // then game over
         if (this._gameboard[7] === 0 &&
             this._gameboard[8] === 0 &&
             this._gameboard[9] === 0 &&
@@ -108,6 +129,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this.endGame();
         }
 
+        // update players' scores
         this.updateScores();
 
         // if player lands in own mancala, it remains same player's turn
@@ -126,6 +148,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         let nextPlayer = this.changeCurrentPlayer(currentPlayer);
     }
 
+    /*
+    * Checks if pocket clicked belongs to current player
+    * Requirement: 
+    */
     checkIfOwnPocket(pocket: number): boolean {
         let currentPlayer: number = this.getCurrentPlayer();
         let playerPocket: number = Math.floor(pocket / 7);
@@ -133,6 +159,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    /*
+    * Retrieves the current player
+    * Requirement: 
+    */
     getCurrentPlayer(): number {
         if (this._playerA.turn && !this._playerB.turn) {
             return 0;
@@ -143,6 +173,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the current player's name
+    * Requirement: 
+    */
     getCurrentPlayerName(): string {
         if (this._playerA.turn && !this._playerB.turn) {
             return this._playerA.name;
@@ -153,6 +187,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the opposing player
+    * Requirement: 
+    */
     getOpposingPlayer(currentPlayer: number): number {
         switch (currentPlayer) {
             case 0:
@@ -164,6 +202,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the opposing player's name
+    * Requirement: 
+    */
     getOpposingPlayerName(): string {
         if (this._playerA.turn && !this._playerB.turn) {
             return this._playerB.name;
@@ -174,12 +216,21 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves number of stones from the clicked pocket and sets the pocket's stone number to zero
+    * Requirement: 
+    */
     removeStonesFromPocket(pocket: number): number {
         let stones: number = this._gameboard[pocket];
         this._gameboard[pocket] = 0;
         return stones;
     }
 
+    /*
+    * Distribute the retrieved stones among the pockets in counter clockwise order, skipping the opponent's mancala
+    * Return the pocket location where the player lands
+    * Requirement: 
+    */
     distributeStones(pocket: number, stones: number): number {
         let currentPosition: number = pocket;
         let remainingStones: number = stones;
@@ -225,6 +276,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         return currentPosition;
     }
 
+    /*
+    * Retrieves the current player's mancala
+    * Requirement: 
+    */
     getCurrentMancala(currentPlayer: number): number {
         switch (currentPlayer) {
             case 0:
@@ -236,6 +291,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the opposing player's mancala
+    * Requirement: 
+    */
     getOpponentMancala(currentPlayer: number): number {
         switch (currentPlayer) {
             case 0:
@@ -247,6 +306,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Changes the current player designation from one player to the other
+    * Requirement: 
+    */
     changeCurrentPlayer(currentPlayer): number {
         switch (currentPlayer) {
             case 0:
@@ -262,6 +325,12 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the pocket directly across the board from the current pocket
+    * Utilized when players land in their own empty pockets
+    * They can steal stones from the opposing player's "cross-pocket"
+    * Requirement: 
+    */
     getCrossPocket(pocket: number): number {
         if ((pocket >= 0 && pocket <= 5) || (pocket >= 7 && pocket <= 12)) {
             return (pocket + 12) - (pocket * 2);
@@ -270,6 +339,10 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Retrieves the name of the a pocket given the position number
+    * Requirement: 
+    */
     getPositionName(position: number): string {
         if (position >= 0 && position <= 5) {
             return 'A' + (position + 1);
@@ -284,10 +357,18 @@ export class GameboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    * Returns true if the location is a mancala, otherwise return false
+    * Requirement: 
+    */
     checkIfMancala(pocket: number): boolean {
         return (pocket === 6 || pocket === 13) ? true : false;
     }
 
+    /*
+    * Synchronizes the players' scores with number of stones in their respective mancalas
+    * Requirement: 
+    */
     updateScores() {
         this._playerA.score = this._gameboard[6];
         this._playerB.score = this._gameboard[13];
