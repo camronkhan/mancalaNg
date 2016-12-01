@@ -12,10 +12,7 @@ import { Player } from '../models/player';
 export class SummaryComponent implements OnInit, OnDestroy {
     private _summaryVisible: boolean;
     private _subscription: Subscription;
-    private _winner: string;
-    private _winnerScore: number;
-    private _loserScore: number;
-    private _isDraw: boolean;
+    private _summaryText: string;
 
     constructor(
         private _gameRestartService: GameRestartService,
@@ -24,10 +21,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
         @Inject('PlayerB') private _playerB: Player
     ) {
         this._gameOverService.gameOverAnnounced$.subscribe(p => {
-            this._winner = this.getWinner();
-            this._winnerScore = this.getWinnerScore();
-            this._loserScore = this.getLoserScore();
-            this._isDraw = this.checkIfDraw();
+            this._summaryText = this.getSummaryText();
             this._summaryVisible = true;
         });
     }
@@ -58,38 +52,16 @@ export class SummaryComponent implements OnInit, OnDestroy {
     }
 
     /*
-    * Returns player with higher score
+    * Returns win/draw text
     * Requirement: 
     */
-    getWinner(): string {
-        if (this._playerA.score > this._playerB.score) { return this._playerA.name; }
-        return this._playerB.name;
-    }
-
-    /*
-    * Returns the winner's score
-    * Requirement: 
-    */
-    getWinnerScore(): number {
-        if (this._playerA.score > this._playerB.score) { return this._playerA.score; }
-        return this._playerB.score;
-    }
-
-    /*
-    * Returns the loser's score
-    * Requirement: 
-    */
-    getLoserScore(): number {
-        if (this._playerA.score > this._playerB.score) { return this._playerB.score; }
-        return this._playerA.score;
-    }
-
-    /*
-    * Returns true if players tied, false otherwise
-    * Requirement: 
-    */
-    checkIfDraw(): boolean {
-        if (this._playerA.score === this._playerB.score) { return true; }
-        return false;
+    getSummaryText(): string {
+        if (this._playerA.score > this._playerB.score) {
+            return `${this._playerA.name} is the winner!`;
+        } else if (this._playerB.score > this._playerA.score) {
+            return `${this._playerB.name} is the winner!`;
+        } else {
+            return `${this._playerA.name} and ${this._playerB.name} tied!`;
+        }
     }
 }
