@@ -106,6 +106,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this._gameboard[13] += this._gameboard[10];
             this._gameboard[13] += this._gameboard[11];
             this._gameboard[13] += this._gameboard[12];
+            this.updateScores();
             this.endGame();
         }
 
@@ -124,6 +125,7 @@ export class GameboardComponent implements OnInit, OnDestroy {
             this._gameboard[6] += this._gameboard[3];
             this._gameboard[6] += this._gameboard[4];
             this._gameboard[6] += this._gameboard[5];
+            this.updateScores();
             this.endGame();
         }
 
